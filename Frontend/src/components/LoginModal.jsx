@@ -3,9 +3,9 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 
-const LoginModal = ({ onClose, switchToSignup }) => {
+const LoginModal = ({ onClose, switchToSignup, onLogin }) => {
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
   })
   const [loading, setLoading] = useState(false)
@@ -43,6 +43,11 @@ const LoginModal = ({ onClose, switchToSignup }) => {
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
 
+      // Call onLogin to update login state in parent
+      if (onLogin) {
+        onLogin()
+      }
+
       // Close the modal and redirect or update UI
       onClose()
       window.location.href = "/dashboard" // Redirect to dashboard
@@ -66,14 +71,14 @@ const LoginModal = ({ onClose, switchToSignup }) => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="email" className="block text-gray-300 mb-2">
-                Email
+              <label htmlFor="username" className="block text-gray-300 mb-2">
+                Username
               </label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded-md bg-[#0f1f35] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required

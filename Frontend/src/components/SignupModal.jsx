@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { X } from "lucide-react"
 
-const SignupModal = ({ onClose, switchToLogin }) => {
+const SignupModal = ({ onClose, switchToLogin, onLogin }) => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -52,8 +52,13 @@ const SignupModal = ({ onClose, switchToLogin }) => {
         throw new Error(data.message || "Registration failed")
       }
 
-      // Registration successful, switch to login
-      switchToLogin()
+      // Registration successful, call onLogin to update login state
+      if (onLogin) {
+        onLogin()
+      }
+
+      // Close the modal
+      onClose()
     } catch (err) {
       setError(err.message || "An error occurred during registration")
     } finally {

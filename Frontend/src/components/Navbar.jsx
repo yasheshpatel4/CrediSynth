@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Menu, X, Globe, Moon } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import Logo from "./Logo"
 
-const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal }) => {
+const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -31,7 +31,12 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal }) => {
 
   const handleSectionClick = (sectionId) => {
     if (isLoggedIn) {
-      scrollToSection(sectionId)
+      if (sectionId === "goal-based-saving") {
+        // Navigate to goal-based-saving page
+        window.location.href = "/goal-based-saving"
+      } else {
+        scrollToSection(sectionId)
+      }
     } else {
       openLoginModal()
     }
@@ -47,15 +52,11 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal }) => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
-              <Logo />
+              <span className="text-blue-600 text-3xl font-serif font-semibold tracking-wide select-none cursor-default">
+                CrediSynth
+              </span>
             </div>
-            <div className="hidden md:ml-10 md:flex md:space-x-8">
-              <button
-                onClick={() => scrollToSection("hero")}
-                className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
-              >
-                Dashboard
-              </button>
+            <div className="hidden md:ml-10 md:flex md:space-x-8 whitespace-nowrap">
               <button
                 onClick={() => handleSectionClick("goal-based-saving")}
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
@@ -83,25 +84,33 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal }) => {
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            <button className="flex items-center text-gray-300 hover:text-blue-500">
-              <Globe className="h-5 w-5 mr-1" />
-              <span>English</span>
-            </button>
-            <button className="text-gray-300 hover:text-blue-500">
-              <Moon className="h-5 w-5" />
-            </button>
-            <button
-              onClick={openLoginModal}
-              className="text-gray-300 hover:text-blue-500 px-4 py-2 text-sm font-medium"
-            >
-              Log In
-            </button>
-            <button
-              onClick={openSignupModal}
-              className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300"
-            >
-              Sign Up
-            </button>
+            {isLoggedIn ? (
+              <button
+                onClick={() => {
+                  if (onLogout) {
+                    onLogout()
+                  }
+                }}
+                className="text-gray-300 hover:text-red-500 px-4 py-2 text-sm font-medium"
+              >
+                Logout
+              </button>
+            ) : (
+              <>
+                <button
+                  onClick={openLoginModal}
+                  className="text-gray-300 hover:text-blue-500 px-4 py-2 text-sm font-medium"
+                >
+                  Log In
+                </button>
+                <button
+                  onClick={openSignupModal}
+                  className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300"
+                >
+                  Sign Up
+                </button>
+              </>
+            )}
           </div>
           <div className="flex items-center md:hidden">
             <button
@@ -117,13 +126,7 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal }) => {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-[#0a1628]">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <button
-              onClick={() => scrollToSection("hero")}
-              className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
-            >
-              Dashboard
-            </button>
+          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 whitespace-nowrap">
             <button
               onClick={() => handleSectionClick("goal-based-saving")}
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
@@ -150,34 +153,41 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal }) => {
             </button>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-700">
-            <div className="flex items-center px-5 space-x-3">
-              <button className="flex items-center text-gray-300 hover:text-blue-500">
-                <Globe className="h-5 w-5 mr-1" />
-                <span>English</span>
-              </button>
-              <button className="text-gray-300 hover:text-blue-500">
-                <Moon className="h-5 w-5" />
-              </button>
-            </div>
             <div className="mt-3 px-2 space-y-1">
-              <button
-                onClick={() => {
-                  openLoginModal()
-                  setIsMenuOpen(false)
-                }}
-                className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-blue-500 w-full text-left"
-              >
-                Log In
-              </button>
-              <button
-                onClick={() => {
-                  openSignupModal()
-                  setIsMenuOpen(false)
-                }}
-                className="block w-full text-left px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-md"
-              >
-                Sign Up
-              </button>
+              {isLoggedIn ? (
+                <button
+                  onClick={() => {
+                    if (onLogout) {
+                      onLogout()
+                    }
+                    setIsMenuOpen(false)
+                  }}
+                  className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-red-500 w-full text-left"
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => {
+                      openLoginModal()
+                      setIsMenuOpen(false)
+                    }}
+                    className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-blue-500 w-full text-left"
+                  >
+                    Log In
+                  </button>
+                  <button
+                    onClick={() => {
+                      openSignupModal()
+                      setIsMenuOpen(false)
+                    }}
+                    className="block w-full text-left px-3 py-2 text-base font-medium bg-blue-600 text-white hover:bg-blue-700 rounded-md"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>

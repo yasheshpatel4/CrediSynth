@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Navbar from "./components/Navbar"
 import Hero from "./components/Hero"
 import Stats from "./components/Stats"
@@ -18,6 +18,14 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showSignupModal, setShowSignupModal] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    // Check localStorage for token on mount
+    const token = localStorage.getItem("token")
+    if (token) {
+      setIsLoggedIn(true)
+    }
+  }, [])
 
   const openLoginModal = () => {
     setShowSignupModal(false)
@@ -39,9 +47,20 @@ function App() {
     closeModals()
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+    setIsLoggedIn(false)
+  }
+
   return (
     <div className="min-h-screen bg-[#050e1d] text-gray-100">
-      <Navbar isLoggedIn={isLoggedIn} openLoginModal={openLoginModal} openSignupModal={openSignupModal} />
+      <Navbar
+        isLoggedIn={isLoggedIn}
+        openLoginModal={openLoginModal}
+        openSignupModal={openSignupModal}
+        onLogout={handleLogout}
+      />
       <Hero openSignupModal={openSignupModal} />
       <Stats />
       <RoleSelector />
