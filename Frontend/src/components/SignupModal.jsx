@@ -5,8 +5,7 @@ import { X } from "lucide-react"
 
 const SignupModal = ({ onClose, switchToLogin }) => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -41,8 +40,7 @@ const SignupModal = ({ onClose, switchToLogin }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
+          username: formData.username,
           email: formData.email,
           password: formData.password,
         }),
@@ -75,35 +73,19 @@ const SignupModal = ({ onClose, switchToLogin }) => {
           {error && <div className="bg-red-900 text-white p-3 rounded-md mb-4">{error}</div>}
 
           <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label htmlFor="firstName" className="block text-gray-300 mb-2">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-md bg-[#0f1f35] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="lastName" className="block text-gray-300 mb-2">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 rounded-md bg-[#0f1f35] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
-                />
-              </div>
+            <div className="mb-4">
+              <label htmlFor="username" className="block text-gray-300 mb-2">
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="w-full px-4 py-2 rounded-md bg-[#0f1f35] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
             </div>
 
             <div className="mb-4">

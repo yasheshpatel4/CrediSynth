@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { Menu, X, Globe, Moon } from "lucide-react"
 import Logo from "./Logo"
 
-const Navbar = ({ openLoginModal, openSignupModal }) => {
+const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -29,6 +29,14 @@ const Navbar = ({ openLoginModal, openSignupModal }) => {
     setIsMenuOpen(false)
   }
 
+  const handleSectionClick = (sectionId) => {
+    if (isLoggedIn) {
+      scrollToSection(sectionId)
+    } else {
+      openLoginModal()
+    }
+  }
+
   return (
     <nav
       className={`bg-[#050e1d] border-b border-gray-800/40 sticky top-0 z-50 transition-all duration-300 ${
@@ -43,34 +51,34 @@ const Navbar = ({ openLoginModal, openSignupModal }) => {
             </div>
             <div className="hidden md:ml-10 md:flex md:space-x-8">
               <button
-                onClick={() => scrollToSection("features")}
+                onClick={() => scrollToSection("hero")}
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
               >
-                Features
+                Dashboard
               </button>
               <button
-                onClick={() => scrollToSection("how-it-works")}
+                onClick={() => handleSectionClick("goal-based-saving")}
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
               >
-                How It Works
+                Goal-Based Saving
               </button>
               <button
-                onClick={() => scrollToSection("security")}
+                onClick={() => handleSectionClick("investment-tracking")}
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
               >
-                Security
+                Investment Tracking
               </button>
               <button
-                onClick={() => scrollToSection("testimonials")}
+                onClick={() => handleSectionClick("money-insights")}
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
               >
-                Testimonials
+                Money Insights
               </button>
               <button
-                onClick={() => scrollToSection("faq")}
+                onClick={() => handleSectionClick("ai-suggestions")}
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
               >
-                FAQ
+                AI Suggestions
               </button>
             </div>
           </div>
@@ -111,34 +119,34 @@ const Navbar = ({ openLoginModal, openSignupModal }) => {
         <div className="md:hidden bg-[#0a1628]">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <button
-              onClick={() => scrollToSection("features")}
+              onClick={() => scrollToSection("hero")}
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
             >
-              Features
+              Dashboard
             </button>
             <button
-              onClick={() => scrollToSection("how-it-works")}
+              onClick={() => handleSectionClick("goal-based-saving")}
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
             >
-              How It Works
+              Goal-Based Saving
             </button>
             <button
-              onClick={() => scrollToSection("security")}
+              onClick={() => handleSectionClick("investment-tracking")}
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
             >
-              Security
+              Investment Tracking
             </button>
             <button
-              onClick={() => scrollToSection("testimonials")}
+              onClick={() => handleSectionClick("money-insights")}
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
             >
-              Testimonials
+              Money Insights
             </button>
             <button
-              onClick={() => scrollToSection("faq")}
+              onClick={() => handleSectionClick("ai-suggestions")}
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
             >
-              FAQ
+              AI Suggestions
             </button>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-700">
