@@ -55,6 +55,7 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
             >
               Goal-Based Saving
             </Link>
+
             <Link
               to="/investment-tracking"
               className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
@@ -68,6 +69,7 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
             >
               Investment Tracking
             </Link>
+
             <Link
               to="/money-insights"
               className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
@@ -81,6 +83,7 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
             >
               Money Insights
             </Link>
+
             <Link
               to="/ai-suggestions"
               className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
@@ -94,6 +97,21 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
             >
               AI Suggestions
             </Link>
+
+            <Link
+              to="/update-profile"
+              className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
+              onClick={e => {
+                if (!isLoggedIn) {
+                  e.preventDefault()
+                  openLoginModal()
+                }
+                setIsMenuOpen(false)
+              }}
+            >
+              Profile
+            </Link>
+            
           </div>
           <div className="hidden md:flex items-center space-x-4">
             {isLoggedIn ? (

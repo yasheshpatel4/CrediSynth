@@ -16,6 +16,7 @@ import Stats from "./components/Stats"
 // import Roleclotor from "./components/RoleSeclotor"
 import Footer from "./components/Footer"
 import Logo from "./components/Logo"
+import UpdateProfile from "./components/UpdateProfile"
 
 function App() {
   const [showLoginModal, setShowLoginModal] = useState(false)
@@ -54,6 +55,8 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
+    localStorage.removeItem("email")
+    localStorage.removeItem("name")
     setIsLoggedIn(false)
     navigate("/")
   }
@@ -101,6 +104,11 @@ function App() {
             <AISuggestions />
           </ProtectedRoute>
         } />
+        <Route path="/update-profile" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <UpdateProfile />
+          </ProtectedRoute>
+        }/>
       </Routes>
       <Footer />
 
