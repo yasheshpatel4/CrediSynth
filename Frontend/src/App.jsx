@@ -15,6 +15,7 @@ import Stats from "./components/Stats"
 import Roleclotor from "./components/RoleSeclotor"
 import Footer from "./components/Footer"
 import Logo from "./components/Logo"
+import UpdateProfile from "./components/UpdateProfile"
 
 function App() {
   const [showLoginModal, setShowLoginModal] = useState(false)
@@ -52,6 +53,7 @@ function App() {
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
+    localStorage.removeItem("email")
     setIsLoggedIn(false)
   }
 
@@ -92,6 +94,7 @@ function App() {
             <Route path="/investment-tracking" element={<InvestmentTracking />} />
             <Route path="/money-insights" element={<MoneyInsights />} />
             <Route path="/ai-suggestions" element={<AISuggestions />} />
+            <Route path="/update-profile" element={<UpdateProfile />} />
           </>
         )}
       </Routes>
