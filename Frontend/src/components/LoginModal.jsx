@@ -34,7 +34,7 @@ const LoginModal = ({ onClose, switchToSignup, onLogin }) => {
       })
 
       const data = await response.json()
-      
+
       if (!response.ok) {
         throw new Error(data.message || "Login failed")
       }
@@ -43,7 +43,6 @@ const LoginModal = ({ onClose, switchToSignup, onLogin }) => {
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
       localStorage.setItem("email", data.email)
-      localStorage.setItem("name", data.username)
 
       // Call onLogin to update login state in parent
       if (onLogin) {
