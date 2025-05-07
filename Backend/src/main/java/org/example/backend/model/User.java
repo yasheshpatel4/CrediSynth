@@ -2,10 +2,8 @@ package org.example.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
 
 import java.util.List;
 
@@ -13,6 +11,7 @@ import java.util.List;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
@@ -63,5 +62,18 @@ public class User {
 
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
+    }
+
+    @OneToMany
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private List<Investment> investments;
+
+    public List<Investment> getInvestments() {
+        return investments;
+    }
+
+    public void setInvestments(List<Investment> investments) {
+        this.investments = investments;
     }
 }
