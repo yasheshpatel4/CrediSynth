@@ -42,6 +42,7 @@ const LoginModal = ({ onClose, switchToSignup, onLogin }) => {
       // Store the token in localStorage
       localStorage.setItem("token", data.token)
       localStorage.setItem("user", JSON.stringify(data.user))
+      localStorage.setItem("email", data.email)
 
       // Call onLogin to update login state in parent
       if (onLogin) {

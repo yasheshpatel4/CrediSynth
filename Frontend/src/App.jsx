@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import LoginModal from "./components/LoginModal"
 import SignupModal from "./components/SignupModal"
@@ -9,10 +9,11 @@ import GoalBasedSaving from "./components/GoalBasedSaving"
 import InvestmentTracking from "./components/InvestmentTracking"
 import MoneyInsights from "./components/MoneyInsights"
 import AISuggestions from "./components/AISuggestions"
+import ProtectedRoute from "./components/ProtectedRoute"
 import "./index.css"
 import Hero from "./components/Hero"
 import Stats from "./components/Stats"
-import Roleclotor from "./components/RoleSeclotor"
+// import Roleclotor from "./components/RoleSeclotor"
 import Footer from "./components/Footer"
 import Logo from "./components/Logo"
 
@@ -20,6 +21,7 @@ function App() {
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [showSignupModal, setShowSignupModal] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Check localStorage for token on mount
@@ -53,6 +55,7 @@ function App() {
     localStorage.removeItem("token")
     localStorage.removeItem("user")
     setIsLoggedIn(false)
+    navigate("/")
   }
 
   return (
@@ -65,35 +68,39 @@ function App() {
       />
       <Routes>
         <Route path="/" element={
-          isLoggedIn ? (
-            <>
-              <Hero openSignupModal={openSignupModal} />
-              <Stats />
-              <Roleclotor />
-            </>
-          ) : (
-            <>
-              <Hero openSignupModal={openSignupModal} />
-              <Stats />
-              <Roleclotor />
-            </>
-          )
-        } />
-        {isLoggedIn && (
           <>
-            <Route path="/dashboard" element={
-              <>
-                <Hero openSignupModal={openSignupModal} />
-                <Stats />
-                <Roleclotor />
-              </>
-            } />
-            <Route path="/goal-based-saving" element={<GoalBasedSaving />} />
-            <Route path="/investment-tracking" element={<InvestmentTracking />} />
-            <Route path="/money-insights" element={<MoneyInsights />} />
-            <Route path="/ai-suggestions" element={<AISuggestions />} />
+            <Hero openSignupModal={openSignupModal} />
+            <Stats />
+            
           </>
-        )}
+        } />
+        <Route path="/dashboard" element={
+          <>
+            <Hero openSignupModal={openSignupModal} />
+            <Stats />
+            
+          </>
+        } />
+        <Route path="/goal-based-saving" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <GoalBasedSaving />
+          </ProtectedRoute>
+        } />
+        <Route path="/investment-tracking" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <InvestmentTracking />
+          </ProtectedRoute>
+        } />
+        <Route path="/money-insights" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <MoneyInsights />
+          </ProtectedRoute>
+        } />
+        <Route path="/ai-suggestions" element={
+          <ProtectedRoute isLoggedIn={isLoggedIn}>
+            <AISuggestions />
+          </ProtectedRoute>
+        } />
       </Routes>
       <Footer />
 
