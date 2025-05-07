@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { X } from "lucide-react"
+import { X } from "lucide-react";
 
 const SignupModal = ({ onClose, switchToLogin, onLogin }) => {
   const [formData, setFormData] = useState({

@@ -1,7 +1,7 @@
-package org.example.backend.Service;
+package org.example.backend.service;
 
-import org.example.backend.Modal.User;
-import org.example.backend.Repository.UserRepository;
+import org.example.backend.model.User;
+import org.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +18,9 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()) != null) {
             return false; // Email already exists
         }
+        System.out.println(user);
         userRepository.save(user);
+        System.out.println(user);
         return true;
     }
 

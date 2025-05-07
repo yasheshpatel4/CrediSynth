@@ -19,6 +19,8 @@ public class User {
     private String password;
     private String email;
 
+    public User() {}
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Goal> goals;

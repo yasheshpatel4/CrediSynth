@@ -2,10 +2,6 @@
 
 import { useState, useEffect } from "react"
 import Navbar from "./components/Navbar"
-import Hero from "./components/Hero"
-import Stats from "./components/Stats"
-import RoleSelector from "./components/RoleSelector"
-import Footer from "./components/Footer"
 import LoginModal from "./components/LoginModal"
 import SignupModal from "./components/SignupModal"
 import GoalBasedSaving from "./components/GoalBasedSaving"
@@ -13,6 +9,11 @@ import InvestmentTracking from "./components/InvestmentTracking"
 import MoneyInsights from "./components/MoneyInsights"
 import AISuggestions from "./components/AISuggestions"
 import "./index.css"
+import Hero from "./components/Hero"
+import Stats from "./components/Stats"
+import Roleclotor from "./components/RoleSeclotor"
+import Footer from "./components/Footer"
+import Logo from "./components/Logo"
 
 function App() {
   const [showLoginModal, setShowLoginModal] = useState(false)
@@ -63,7 +64,7 @@ function App() {
       />
       <Hero openSignupModal={openSignupModal} />
       <Stats />
-      <RoleSelector />
+      <Roleclotor />
       {isLoggedIn && (
         <>
           <GoalBasedSaving />

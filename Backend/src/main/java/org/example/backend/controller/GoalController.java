@@ -33,7 +33,7 @@ public class GoalController {
 
     @PostMapping("/{userEmail}")
     public ResponseEntity<?> createGoal(@PathVariable String userEmail, @RequestBody Goal goal) {
-        Optional<User> userOpt = userRepository.findByEmail(userEmail);
+        Optional<User> userOpt = Optional.ofNullable(userRepository.findByEmail(userEmail));
         if (userOpt.isEmpty()) return ResponseEntity.notFound().build();
 
         User user = userOpt.get();
@@ -49,7 +49,7 @@ public class GoalController {
 
     @GetMapping("/{userEmail}")
     public ResponseEntity<List<Goal>> getGoals(@PathVariable String userEmail) {
-        Optional<User> userOpt = userRepository.findByEmail(userEmail);
+        Optional<User> userOpt = Optional.ofNullable(userRepository.findByEmail(userEmail));
         if (userOpt.isEmpty()) return ResponseEntity.notFound().build();
 
         Long userId = userOpt.get().getId();

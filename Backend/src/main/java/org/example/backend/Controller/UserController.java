@@ -1,7 +1,7 @@
-package org.example.backend.Controller;
+package org.example.backend.controller;
 
-import org.example.backend.Modal.User;
-import org.example.backend.Service.UserService;
+import org.example.backend.model.User;
+import org.example.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 // Removed @CrossOrigin to rely on global CorsConfig
+@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     @Autowired
@@ -19,6 +20,7 @@ public class UserController {
     public ResponseEntity<?> signup(@RequestBody User user) {
         try {
             boolean success = userService.registerUser(user);
+            System.out.println(success);
             if (success) {
                 return ResponseEntity.ok().body("{\"message\":\"Signup successful\"}");
             } else {

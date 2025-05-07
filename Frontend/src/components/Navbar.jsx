@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
-import Logo from "./Logo"
 
 const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
