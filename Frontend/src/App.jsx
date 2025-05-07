@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Routes, Route } from "react-router-dom"
 import Navbar from "./components/Navbar"
 import LoginModal from "./components/LoginModal"
 import SignupModal from "./components/SignupModal"
@@ -62,17 +63,38 @@ function App() {
         openSignupModal={openSignupModal}
         onLogout={handleLogout}
       />
-      <Hero openSignupModal={openSignupModal} />
-      <Stats />
-      <Roleclotor />
-      {isLoggedIn && (
-        <>
-          <GoalBasedSaving />
-          <InvestmentTracking />
-          <MoneyInsights />
-          <AISuggestions />
-        </>
-      )}
+      <Routes>
+        <Route path="/" element={
+          isLoggedIn ? (
+            <>
+              <Hero openSignupModal={openSignupModal} />
+              <Stats />
+              <Roleclotor />
+            </>
+          ) : (
+            <>
+              <Hero openSignupModal={openSignupModal} />
+              <Stats />
+              <Roleclotor />
+            </>
+          )
+        } />
+        {isLoggedIn && (
+          <>
+            <Route path="/dashboard" element={
+              <>
+                <Hero openSignupModal={openSignupModal} />
+                <Stats />
+                <Roleclotor />
+              </>
+            } />
+            <Route path="/goal-based-saving" element={<GoalBasedSaving />} />
+            <Route path="/investment-tracking" element={<InvestmentTracking />} />
+            <Route path="/money-insights" element={<MoneyInsights />} />
+            <Route path="/ai-suggestions" element={<AISuggestions />} />
+          </>
+        )}
+      </Routes>
       <Footer />
 
       {showLoginModal && <LoginModal onClose={closeModals} switchToSignup={openSignupModal} onLogin={handleLogin} />}

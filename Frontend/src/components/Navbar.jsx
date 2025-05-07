@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Menu, X } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -20,27 +21,6 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId)
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" })
-    }
-    setIsMenuOpen(false)
-  }
-
-  const handleSectionClick = (sectionId) => {
-    if (isLoggedIn) {
-      if (sectionId === "goal-based-saving") {
-        // Navigate to goal-based-saving page
-        window.location.href = "/goal-based-saving"
-      } else {
-        scrollToSection(sectionId)
-      }
-    } else {
-      openLoginModal()
-    }
-  }
-
   return (
     <nav
       className={`bg-[#050e1d] border-b border-gray-800/40 sticky top-0 z-50 transition-all duration-300 ${
@@ -56,30 +36,58 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
               </span>
             </div>
             <div className="hidden md:ml-10 md:flex md:space-x-8 whitespace-nowrap">
-              <button
-                onClick={() => handleSectionClick("goal-based-saving")}
+              <Link
+                to="/goal-based-saving"
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
+                onClick={e => {
+                  if (!isLoggedIn) {
+                    e.preventDefault()
+                    openLoginModal()
+                  }
+                  setIsMenuOpen(false)
+                }}
               >
                 Goal-Based Saving
-              </button>
-              <button
-                onClick={() => handleSectionClick("investment-tracking")}
+              </Link>
+              <Link
+                to="/investment-tracking"
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
+                onClick={e => {
+                  if (!isLoggedIn) {
+                    e.preventDefault()
+                    openLoginModal()
+                  }
+                  setIsMenuOpen(false)
+                }}
               >
                 Investment Tracking
-              </button>
-              <button
-                onClick={() => handleSectionClick("money-insights")}
+              </Link>
+              <Link
+                to="/money-insights"
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
+                onClick={e => {
+                  if (!isLoggedIn) {
+                    e.preventDefault()
+                    openLoginModal()
+                  }
+                  setIsMenuOpen(false)
+                }}
               >
                 Money Insights
-              </button>
-              <button
-                onClick={() => handleSectionClick("ai-suggestions")}
+              </Link>
+              <Link
+                to="/ai-suggestions"
                 className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
+                onClick={e => {
+                  if (!isLoggedIn) {
+                    e.preventDefault()
+                    openLoginModal()
+                  }
+                  setIsMenuOpen(false)
+                }}
               >
                 AI Suggestions
-              </button>
+              </Link>
             </div>
           </div>
           <div className="hidden md:flex items-center space-x-4">
@@ -126,30 +134,58 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
       {isMenuOpen && (
         <div className="md:hidden bg-[#0a1628]">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 whitespace-nowrap">
-            <button
-              onClick={() => handleSectionClick("goal-based-saving")}
+            <Link
+              to="/goal-based-saving"
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
+              onClick={e => {
+                if (!isLoggedIn) {
+                  e.preventDefault()
+                  openLoginModal()
+                }
+                setIsMenuOpen(false)
+              }}
             >
               Goal-Based Saving
-            </button>
-            <button
-              onClick={() => handleSectionClick("investment-tracking")}
+            </Link>
+            <Link
+              to="/investment-tracking"
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
+              onClick={e => {
+                if (!isLoggedIn) {
+                  e.preventDefault()
+                  openLoginModal()
+                }
+                setIsMenuOpen(false)
+              }}
             >
               Investment Tracking
-            </button>
-            <button
-              onClick={() => handleSectionClick("money-insights")}
+            </Link>
+            <Link
+              to="/money-insights"
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
+              onClick={e => {
+                if (!isLoggedIn) {
+                  e.preventDefault()
+                  openLoginModal()
+                }
+                setIsMenuOpen(false)
+              }}
             >
               Money Insights
-            </button>
-            <button
-              onClick={() => handleSectionClick("ai-suggestions")}
+            </Link>
+            <Link
+              to="/ai-suggestions"
               className="text-gray-300 hover:text-blue-500 block px-3 py-2 text-base font-medium w-full text-left"
+              onClick={e => {
+                if (!isLoggedIn) {
+                  e.preventDefault()
+                  openLoginModal()
+                }
+                setIsMenuOpen(false)
+              }}
             >
               AI Suggestions
-            </button>
+            </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-700">
             <div className="mt-3 px-2 space-y-1">

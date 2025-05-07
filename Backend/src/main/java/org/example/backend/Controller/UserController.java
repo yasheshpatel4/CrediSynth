@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-// Removed @CrossOrigin to rely on global CorsConfig
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
