@@ -1,9 +1,11 @@
-package org.example.backend.controller;
+package org.example.backend.Controller;
 
+
+import org.example.backend.Service.FlaskService;
 import org.example.backend.model.Investment;
 import org.example.backend.model.User;
-import org.example.backend.repository.InvestmentRepository;
-import org.example.backend.repository.UserRepository;
+import org.example.backend.Repository.InvestmentRepository;
+import org.example.backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,8 @@ import java.util.Map;
 public class InvestmentController {
 
     private RestTemplate restTemplate;
-    public InvestmentController(RestTemplate restTemplate){
+
+    public InvestmentController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
@@ -27,6 +30,9 @@ public class InvestmentController {
 
     @Autowired
     private UserRepository userRepo;
+
+    @Autowired
+    private FlaskService flaskService;
 
     @GetMapping("/user/{userId}")
     public List<Investment> getInvestments(@PathVariable String userId) {
@@ -61,15 +67,29 @@ public class InvestmentController {
         investmentRepo.deleteById(id);
     }
 
-    @PostMapping("/analyze/{id}")
-    public ResponseEntity<?> analyzeInvestment(@PathVariable String id) {
-        Investment request = investmentRepo.findById(Long.parseLong(id)).orElse(null);
-        String flaskUrl = "http://localhost:5000/analyze"; // Flask API URL
-        // Send POST request to Flask
-        ResponseEntity<Map> response = restTemplate.postForEntity(flaskUrl, request, Map.class);
-
-        // Return Flask response to frontend
-        return ResponseEntity.ok(response.getBody());
+    @PostMapping("/predict/{id}")
+    public Map<String, Object> analyzeInvestment(@PathVariable Long id) {
+        Investment investment = investmentRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Investment not found with ID: " + id));
+        return flaskService.analyzeInvestment(investment);
     }
 
 }
+//    import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.web.bind.annotation.*;
+//
+//    @RestController
+//    @RequestMapping("/investment")
+//    public class InvestmentController {
+//
+//        @Autowired
+//        private FlaskService flaskService;
+//
+//        @PostMapping("/analyze")
+//        public String analyzeInvestment(@RequestBody Investment data) {
+//            return flaskService.callFlaskPrediction(data);
+//        }
+//    }
+//
+//
+//}

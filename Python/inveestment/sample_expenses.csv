@@ -1,0 +1,33 @@
+date,description,amount,category,type
+2023-01-05,Groceries,-1500,Food,expense
+2023-01-10,Salary,50000,Income,income
+2023-01-15,Electricity Bill,-2000,Utilities,expense
+2023-01-20,Freelance Project,10000,Income,income
+2023-02-05,Restaurant,-1200,Food,expense
+2023-02-10,Salary,50000,Income,income
+2023-02-15,Internet Bill,-1500,Utilities,expense
+2023-02-20,Stock Dividend,2000,Investment,income
+2023-03-05,Groceries,-1600,Food,expense
+2023-03-10,Salary,50000,Income,income
+2023-03-15,Water Bill,-800,Utilities,expense
+2023-03-20,Freelance Project,12000,Income,income
+2023-04-05,Car Repair,-5000,Transport,expense
+2023-04-10,Salary,50000,Income,income
+2023-04-15,Medical Bill,-3000,Health,expense
+2023-04-20,Bonus,7000,Income,income
+2023-05-05,Groceries,-1700,Food,expense
+2023-05-10,Salary,50000,Income,income
+2023-05-15,Electricity Bill,-2100,Utilities,expense
+2023-05-20,Freelance Project,15000,Income,income
+2023-06-05,Restaurant,-1300,Food,expense
+2023-06-10,Salary,50000,Income,income
+2023-06-15,Internet Bill,-1600,Utilities,expense
+2023-06-20,Stock Dividend,2500,Investment,income
+2023-07-05,Groceries,-1800,Food,expense
+2023-07-10,Salary,50000,Income,income
+2023-07-15,Water Bill,-900,Utilities,expense
+2023-07-20,Freelance Project,13000,Income,income
+2023-08-05,Car Repair,-5500,Transport,expense
+2023-08-10,Salary,50000,Income,income
+2023-08-15,Medical Bill,-3500,Health,expense
+2023-08-20,Bonus,8000,Income,income

@@ -1,7 +1,7 @@
-package org.example.backend.controller;
+package org.example.backend.Controller;
 
 import org.example.backend.model.*;
-import org.example.backend.repository.*;
+import org.example.backend.Repository.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
