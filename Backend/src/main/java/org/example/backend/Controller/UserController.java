@@ -1,10 +1,10 @@
-package org.example.backend.controller;
+package org.example.backend.Controller;
 
 import org.example.backend.model.User;
 import org.example.backend.model.UserProfile;
-import org.example.backend.repository.UserProfileRepository;
-import org.example.backend.repository.UserRepository;
-import org.example.backend.service.UserService;
+import org.example.backend.Repository.UserProfileRepository;
+import org.example.backend.Repository.UserRepository;
+import org.example.backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
