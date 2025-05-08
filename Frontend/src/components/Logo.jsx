@@ -1,3 +1,4 @@
+import { Link } from "lucide-react"
 const Logo = () => {
     return (
         <div className="flex items-center">
@@ -6,7 +7,9 @@ const Logo = () => {
                 <div className="absolute inset-1 bg-[#050e1d] rounded-sm transform rotate-45"></div>
                 <div className="absolute inset-2 bg-gradient-to-r from-teal-400 to-blue-500 rounded-sm transform rotate-45"></div>
             </div>
-            <span className="ml-2 text-xl font-bold text-blue-500">CrediSynth</span>
+            <a href="/dashboard">
+                <span className="ml-2 text-xl font-bold text-blue-500">CrediSynth</span>
+            </a>
         </div>
     )
 }

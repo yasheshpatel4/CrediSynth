@@ -1,7 +1,19 @@
 "use client"
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js"
+import { Bar } from "react-chartjs-2"
+import { useState,useEffect } from "react"
 
-import { useEffect, useState } from "react"
-import { PieChart, Pie, Cell, Tooltip } from "recharts"
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+
 
 const API_BASE = "http://localhost:8080/api/investments"
 const USER_ID = localStorage.getItem("email")
@@ -24,6 +36,81 @@ const InvestmentTracking = () => {
     const res = await fetch(`${API_BASE}/user/${USER_ID}`)
     const data = await res.json()
     setInvestments(data)
+  }
+
+  const COLORS = ["#60a5fa", "#34d399", "#f87171", "#facc15"]
+
+  const investmentChartData = {
+    labels: investments.map((inv) => inv.asset),
+    datasets: [
+      {
+        label: "Purchase Price",
+        data: investments.map((inv) => parseFloat(inv.purchasePrice)),
+        backgroundColor: COLORS[0],
+        borderRadius: 8,
+      },
+      {
+        label: "Current Value",
+        data: investments.map((inv) => parseFloat(inv.currentValue)),
+        backgroundColor: COLORS[1],
+        borderRadius: 8,
+      },
+    ],
+  }
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        backgroundColor: "#1f2937",
+        titleColor: "#fff",
+        bodyColor: "#f3f4f6",
+        borderColor: "#4b5563",
+        borderWidth: 1,
+        callbacks: {
+          title: (tooltipItems) => {
+            const index = tooltipItems[0].dataIndex
+            return investments[index].asset
+          },
+          afterLabel: (tooltipItem) => {
+            const inv = investments[tooltipItem.dataIndex]
+            return [
+              `Type: ${inv.investmentType}`,
+              `Amount: ${inv.amount}`,
+              `Purchase Date: ${inv.purchaseDate}`,
+              `Purchase Price: $${inv.purchasePrice}`,
+              `Current Value: $${inv.currentValue}`,
+            ]
+          },
+        },
+      },
+      legend: {
+        labels: {
+          color: "white",
+          font: { size: 14 },
+        },
+      },
+      title: {
+        display: true,
+        text: "Investment Portfolio Overview",
+        color: "#60a5fa",
+        font: {
+          size: 20,
+          weight: "bold",
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: { color: "white" },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+      y: {
+        ticks: { color: "white" },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+    },
   }
 
   useEffect(() => {
@@ -74,7 +161,15 @@ const InvestmentTracking = () => {
   const totalValue = investments.reduce((acc, inv) => acc + inv.currentValue, 0)
 
   return (
+    
     <section className="max-w-7xl mx-auto px-4 py-12">
+      <div className="bg-[#0a1628] p-6 rounded-lg shadow-lg mb-8">
+        <h3 className="text-xl font-semibold text-blue-400 mb-4">Investment Chart</h3>
+        <div className="h-[400px]">
+          <Bar data={investmentChartData} options={chartOptions} />
+        </div>
+      </div>
+
       <h2 className="text-3xl font-bold mb-6 text-white">Investment Tracking</h2>
 
       <div className="mb-8 bg-[#0a1628] p-6 rounded-lg shadow-md">

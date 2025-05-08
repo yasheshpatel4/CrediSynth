@@ -60,69 +60,19 @@ public class GoalController {
     }
 
     @PostMapping("/analyze/{id1}")
-    public ResponseEntity<?> predictInvestment(@PathVariable Long id1) {
-        Goal request = goalRepository.findById(id1).orElse(null);
-        if (request == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\": \"Goal not found\"}");
-        }
-
-        try {
-            long daysLeft = calculateDaysRemaining(request);
-            // Use internal logic instead of calling the Python API
-            double confidence = calculatePredictionConfidence(request, daysLeft);
-            String message = generatePredictionMessage(confidence);
-            String resultMessage = generateUserFriendlyMessage(confidence, message, daysLeft);
-
-            // Construct result object to send back
-            Map<String, Object> result = new HashMap<>();
-            result.put("message", resultMessage);
-            result.put("confidence", confidence);
-            result.put("prediction", (confidence >= 0.7) ? 1 : 0); // Predicted outcome based on confidence
-            result.put("status", "success");
-
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("{\"error\": \"" + e.getMessage() + "\"}");
-        }
+   public ResponseEntity<?> analyzeGoal(@PathVariable String id1) {
+        Goal g = goalRepository.findById(Long.parseLong(id1)).orElse(null);
+        ResponseEntity<Map> response = restTemplate.postForEntity(PYTHON_API_URL, g, Map.class);
+        System.out.println(response.getBody());
+        // Return Flask response to frontend
+        return ResponseEntity.ok(response.getBody());
     }
 
-    // Helper method to calculate days remaining
-    private long calculateDaysRemaining(Goal request) {
-        return ChronoUnit.DAYS.between(LocalDate.now(), request.getDeadline());
-    }
 
-    // New internal logic for calculating prediction confidence
-    private double calculatePredictionConfidence(Goal request, long daysLeft) {
-        // Simple logic for the prediction (you can replace it with more complex calculations)
-        double savingsRate = request.getSavedAmount() / request.getTargetAmount();
-        double timeFactor = (double) daysLeft / 365; // Assuming 365 days in a year
-
-        // Confidence calculation (this is just an example formula)
-        double confidence = (savingsRate * timeFactor) * 0.9;
-
-        // Ensure the confidence is within the range [0, 1]
-        return Math.min(Math.max(confidence, 0), 1);
-    }
-
-    // New message generation logic based on internal calculation
-    private String generatePredictionMessage(double confidence) {
-        if (confidence >= 0.7) {
-            return "It seems highly likely that you will reach your goal!";
-        } else if (confidence >= 0.4) {
-            return "There is a moderate chance that you will reach your goal.";
-        } else {
-            return "It seems unlikely that you will reach your goal without adjustments.";
-        }
-    }
-
-    // Helper method to generate a user-friendly message for the result
-    private String generateUserFriendlyMessage(double confidence, String message, long daysLeft) {
-        String predictionStatus = (confidence >= 0.7) ? "Highly Likely" : "Uncertain";
-        return String.format("Based on your monthly savings, goal amount, and remaining days, it is %s that you will achieve your goal.\n\n" +
-                "Confidence level: %.2f%%\n\n" +
-                "Analysis: %s\n" +
-                "Time left: %d days", predictionStatus, confidence * 100, message, daysLeft);
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteGoal(@PathVariable Long id) {
+        goalRepository.deleteById(id);
+        return ResponseEntity.ok().body("{\"message\": \"Goal deleted successfully\"}");
     }
 
 }
