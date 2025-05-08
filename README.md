@@ -55,28 +55,33 @@ credisynth/
 │   ├── models/
 │   └── main.py
 └── README.md
----
-## ⚙️ Setup Instructions
 
 ```
-## 1. Clone the repository
+## ⚙️ Setup Instructions
+### 1. Clone the repository
 - git clone https://github.com/your-username/credisynth.git
 - cd credisynth
-## 2. Set up the Python Data Engine (AI & Analytics)
+### 2. Set up the Python Data Engine (AI & Analytics)
 - cd python
 - pip install -r requirements.txt
 - (run python code)
-## 3. Start the Spring Boot Backend
+### 3. Start the Spring Boot Backend
 - cd backend
 - ./mvnw spring-boot:run
-## 4. Run the React Frontend
+### 4. Run the React Frontend
 - cd frontend
 - npm install
 - npm run dev
 ## Note:
-### - Ensure proper CORS setup in Spring Boot for frontend-backend communication.
-### - Configure Python backend URL in your React frontend if needed.
-### - Ports must not conflict; adjust if any are already in use.
+#### - Ensure proper CORS setup in Spring Boot for frontend-backend communication.
+#### - Configure Python backend URL in your React frontend if needed.
+#### - Ports must not conflict; adjust if any are already in use.
 
+---
 
+## 🙌 Contributors
+
+- [@yasheshpatel4](https://github.com/yasheshpatel4) – Full Stack Developer  
+- [@zeel-patel2005](https://github.com/zeel-patel2005) –   Full Stack Developer
+- [@harmit-patel](https://github.com/harmit-patel) – Full Stack Developer
 
