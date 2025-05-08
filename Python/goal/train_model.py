@@ -5,7 +5,7 @@ import tensorflow as tf
 import joblib
 
 # Load data
-df = pd.read_csv("C:/Users/zeelp/Desktop/FinAi  Python/financial_data_500.csv")
+df = pd.read_csv("financial_data_500.csv")
 
 # Convert dates to datetime
 df['transaction_date'] = pd.to_datetime(df['transaction_date'])
@@ -27,7 +27,7 @@ scaler = StandardScaler()
 features_scaled = scaler.fit_transform(features)
 
 # Save the scaler
-joblib.dump(scaler, "saved_model/scaler.pkl")
+joblib.dump(scaler, "scaler.pkl")
 
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(features_scaled, target, test_size=0.2, random_state=42)
@@ -44,6 +44,6 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 model.fit(X_train, y_train, epochs=30, batch_size=16, validation_data=(X_test, y_test), verbose=1)
 
 # Save model
-model.save("saved_model/investment_predictor.h5")
+model.save("investment_predictor.h5")
 print("✅ Success: Model trained and saved as 'investment_predictor.h5'.")
 print("✅ Scaler saved as 'scaler.pkl'.")

@@ -1,10 +1,10 @@
 package org.example.backend.controller;
 
 
-import org.example.backend.Service.FlaskService;
+import org.example.backend.service.FlaskService;
 import org.example.backend.model.Investment;
 import org.example.backend.model.User;
-import org.example.backend.Repository.InvestmentRepository;
+import org.example.backend.repository.InvestmentRepository;
 import org.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;

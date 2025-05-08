@@ -82,21 +82,7 @@ const Navbar = ({ isLoggedIn, openLoginModal, openSignupModal, onLogout }) => {
               }}
             >
               Money Insights
-            </Link>
-
-            <Link
-              to="/ai-suggestions"
-              className="text-gray-300 hover:text-blue-500 px-3 py-2 text-sm font-medium"
-              onClick={e => {
-                if (!isLoggedIn) {
-                  e.preventDefault()
-                  openLoginModal()
-                }
-                setIsMenuOpen(false)
-              }}
-            >
-              AI Suggestions
-            </Link>
+            </Link>           
 
             <Link
               to="/update-profile"

@@ -6,7 +6,7 @@ import joblib
 from sklearn.metrics import accuracy_score
 
 # Load dataset
-df = pd.read_csv('C:/Users/zeelp/Desktop/Python/money_insights/high_accuracy_financial_users.csv')
+df = pd.read_csv('high_accuracy_financial_users.csv')
 
 # Encode categorical columns
 le = LabelEncoder()
@@ -26,9 +26,8 @@ model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
 # Save model
-joblib.dump(model, 'money_insights/money_insights_model.pkl')
+joblib.dump(model, 'money_insights_model.pkl')
 
 y_pred_test = model.predict(X_test)
 test_accuracy = accuracy_score(y_test, y_pred_test)
 print(f"Model test accuracy: {test_accuracy:.2%}")
-
