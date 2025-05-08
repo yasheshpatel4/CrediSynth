@@ -53,11 +53,32 @@ def analyze_data(df):
 
     recommendations.append("Consider investing ₹5,000 in a low-risk mutual fund to balance your portfolio.")
 
+    # Detailed expense and saving analysis text
+    expense_by_category = df[df['type'] == 'expense'].groupby('category')['amount'].sum().abs()
+    saving_by_category = df[df['type'] == 'saving'].groupby('category')['amount'].sum()
+    saving_by_category = saving_by_category[saving_by_category > 0]
+
+    analysis_texts = []
+
+    if not expense_by_category.empty:
+        top_expense_category = expense_by_category.idxmax()
+        top_expense_amount = expense_by_category.max()
+        analysis_texts.append(f"You spend the most on {top_expense_category} with ₹{int(top_expense_amount)}.")
+
+    if not saving_by_category.empty:
+        top_saving_category = saving_by_category.idxmax()
+        top_saving_amount = saving_by_category.max()
+        analysis_texts.append(f"You save the most on {top_saving_category} with ₹{int(top_saving_amount)}.")
+
+    if not analysis_texts:
+        analysis_texts.append("No sufficient data for detailed expense and saving analysis.")
+
     return {
         "monthlySavingExpense": monthly_saving_expense,
         "monthlySaving": monthly_saving,
         "categoryWiseSpending": category_wise_spending,
-        "recommendations": recommendations
+        "recommendations": recommendations,
+        "detailedAnalysis": analysis_texts
     }
 
 @app.route('/money-insights/analyze', methods=['POST'])

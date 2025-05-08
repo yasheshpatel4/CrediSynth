@@ -38,85 +38,85 @@ const MoneyInsights = () => {
   const [lineData, setLineData] = useState(null)
   const [pieData, setPieData] = useState(null)
   const [submitSuccess, setSubmitSuccess] = useState(false)
+  const [showAnalysis, setShowAnalysis] = useState(false)
+  const [detailedAnalysis, setDetailedAnalysis] = useState([])
+  const [recommendations, setRecommendations] = useState([])
 
   const userEmail = localStorage.getItem("email")
 
   const fetchAnalysisData = async () => {
     setLoading(true)
     setError("")
-      try {
-        const res = await axios.post(`http://localhost:8080/api/money-insights/analyze/${userEmail}`)
-        const data = res.data
+    try {
+      const res = await axios.post(`http://localhost:8080/api/money-insights/analyze/${userEmail}`)
+      const data = res.data
 
-        // console.log("Category Wise Spending from backend:", data.categoryWiseSpending)
+      const barLabels = data.monthlySavingExpense?.labels || []
+      const savingValues = data.monthlySavingExpense?.saving || []
+      const expenseValues = data.monthlySavingExpense?.expense || []
+      setBarData({
+        labels: barLabels,
+        datasets: [
+          {
+            label: "Saving",
+            data: savingValues,
+            backgroundColor: "#36A2EB",
+          },
+          {
+            label: "Expense",
+            data: expenseValues,
+            backgroundColor: "#FF6384",
+          },
+        ],
+      })
 
-        // Prepare Bar Chart Data (Monthly saving and expense)
-        const barLabels = data.monthlySavingExpense?.labels || []
-        const savingValues = data.monthlySavingExpense?.saving || []
-        const expenseValues = data.monthlySavingExpense?.expense || []
-        setBarData({
-          labels: barLabels,
-          datasets: [
-            {
-              label: "Saving",
-              data: savingValues,
-              backgroundColor: "#36A2EB",
-            },
-            {
-              label: "Expense",
-              data: expenseValues,
-              backgroundColor: "#FF6384",
-            },
-          ],
-        })
+      const lineLabels = data.monthlySaving?.labels || []
+      const monthlySavingValues = data.monthlySaving?.data || []
+      setLineData({
+        labels: lineLabels,
+        datasets: [
+          {
+            label: "Monthly Saving",
+            data: monthlySavingValues,
+            borderColor: "#36A2EB",
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            fill: true,
+            tension: 0.3,
+          },
+        ],
+      })
 
-        // Prepare Line Chart Data (Monthly saving)
-        const lineLabels = data.monthlySaving?.labels || []
-        const monthlySavingValues = data.monthlySaving?.data || []
-        setLineData({
-          labels: lineLabels,
-          datasets: [
-            {
-              label: "Monthly Saving",
-              data: monthlySavingValues,
-              borderColor: "#36A2EB",
-              backgroundColor: "rgba(54, 162, 235, 0.2)",
-              fill: true,
-              tension: 0.3,
-            },
-          ],
-        })
+      const pieLabels = data.categoryWiseSpending?.labels || []
+      const pieValues = data.categoryWiseSpending?.data || []
+      setPieData({
+        labels: pieLabels,
+        datasets: [
+          {
+            label: "Category Wise Spending",
+            data: pieValues,
+            backgroundColor: [
+              "#FF6384",
+              "#36A2EB",
+              "#FFCE56",
+              "#4BC0C0",
+              "#9966FF",
+              "#FF9F40",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      })
 
-        // Prepare Pie Chart Data (Category wise spending)
-        const pieLabels = data.categoryWiseSpending?.labels || []
-        const pieValues = data.categoryWiseSpending?.data || []
-        setPieData({
-          labels: pieLabels,
-          datasets: [
-            {
-              label: "Category Wise Spending",
-              data: pieValues,
-              backgroundColor: [
-                "#FF6384",
-                "#36A2EB",
-                "#FFCE56",
-                "#4BC0C0",
-                "#9966FF",
-                "#FF9F40",
-              ],
-              borderWidth: 1,
-            },
-          ],
-        })
-
-        setSubmitSuccess(true)
-        setError("")
-      } catch (err) {
-        setError("Failed to fetch analysis data.")
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
+      setDetailedAnalysis(data.detailedAnalysis || [])
+      setRecommendations(data.recommendations || [])
+      setSubmitSuccess(true)
+      setError("")
+    } catch (err) {
+      setError("Failed to fetch analysis data.")
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -137,7 +137,6 @@ const MoneyInsights = () => {
 
     setLoading(true)
     try {
-      // Send user input data to backend
       await axios.post(`http://localhost:8080/api/money-insights/add/${userEmail}`, {
         description,
         amount: numericAmount,
@@ -146,10 +145,8 @@ const MoneyInsights = () => {
         type: detailType,
       })
 
-      // Fetch analysis data from backend
       await fetchAnalysisData()
 
-      // Clear form fields
       setDescription("")
       setAmount("")
       setDate("")
@@ -160,6 +157,12 @@ const MoneyInsights = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  // New handler for Analysis button click
+  const handleAnalysisClick = async () => {
+    await fetchAnalysisData()
+    setShowAnalysis(true)
   }
 
   useEffect(() => {
@@ -284,18 +287,46 @@ const MoneyInsights = () => {
         )}
       </div>
 
-      {/** Recommendations Section */}
-      {submitSuccess && (
+      {/* Analysis Button */}
+      <div className="mt-6">
+        <button
+          onClick={handleAnalysisClick}
+          disabled={loading}
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded disabled:opacity-50"
+        >
+          {loading ? "Loading Analysis..." : "Show Analysis"}
+        </button>
+      </div>
+
+      {/* Show detailed analysis when button clicked */}
+      {showAnalysis && (
         <div className="bg-[#0a1628] p-6 rounded-lg shadow-md max-w-7xl mt-8 text-gray-300">
-          <h3 className="text-xl font-semibold mb-4 text-blue-400">Personalized Recommendations</h3>
-          {pieData && (
-            <ul className="list-disc list-inside">
-              {pieData.recommendations ? (
-                pieData.recommendations.map((rec, idx) => <li key={idx}>{rec}</li>)
-              ) : (
-                <li>No recommendations available at this time.</li>
+          <h3 className="text-xl font-semibold mb-4 text-blue-400">Analysis Suggestions</h3>
+          {(detailedAnalysis.length > 0 || recommendations.length > 0) ? (
+            <>
+              {detailedAnalysis.length > 0 && (
+                <>
+                  <h4 className="text-lg font-semibold mb-2">Detailed Analysis</h4>
+                  <ul className="list-disc list-inside mb-4">
+                    {detailedAnalysis.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </>
               )}
-            </ul>
+              {recommendations.length > 0 && (
+                <>
+                  <h4 className="text-lg font-semibold mb-2">Recommendations</h4>
+                  <ul className="list-disc list-inside">
+                    {recommendations.map((rec, idx) => (
+                      <li key={idx}>{rec}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </>
+          ) : (
+            <p>No analysis suggestions available.</p>
           )}
         </div>
       )}
