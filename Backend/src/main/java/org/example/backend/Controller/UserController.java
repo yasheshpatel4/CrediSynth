@@ -24,7 +24,7 @@ public class UserController {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
-    
+
     @Autowired
     private UserRepository userRepository;
 
