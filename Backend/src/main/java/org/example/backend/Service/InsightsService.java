@@ -77,7 +77,7 @@ public class InsightsService {
 
 // Call Python microservice
         RestTemplate restTemplate = new RestTemplate();
-        String pythonApiUrl = "http://localhost:5000/analyze/insights";
+        String pythonApiUrl = "http://localhost:5003/analyze/insights";
 
         Map<String, Object> insights = restTemplate.postForObject(pythonApiUrl, payload, Map.class);
         return insights;

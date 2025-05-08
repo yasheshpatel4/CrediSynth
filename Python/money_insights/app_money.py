@@ -6,7 +6,7 @@ import traceback
 app = Flask(__name__)
 
 # Load trained model
-model = joblib.load('money_insights/money_insights_model.pkl')
+model = joblib.load('C:/Users/zeelp/Desktop/CrediSynth/Python/money_insights/money_insights_model.pkl')
 
 # Label mappings
 investment_mapping = {'Stock': 0, 'MutualFund': 1, 'ETF': 2, 'Bond': 3}
@@ -110,4 +110,4 @@ def predict_insight():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5003,debug=True)

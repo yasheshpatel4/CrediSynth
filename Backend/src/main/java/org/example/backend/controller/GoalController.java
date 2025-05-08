@@ -19,12 +19,12 @@ import java.util.*;
 public class GoalController {
 
     @Autowired
-    private org.example.backend.Repository.GoalRepository goalRepository;
+    private org.example.backend.repository.GoalRepository goalRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    private final String PYTHON_API_URL = "http://localhost:5000/predict";
+    private final String PYTHON_API_URL = "http://localhost:5001/predict";
     private final RestTemplate restTemplate;
 
     // Constructor injection

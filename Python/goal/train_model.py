@@ -5,7 +5,7 @@ import tensorflow as tf
 import joblib
 
 # Load data
-df = pd.read_csv("C:/Users/zeelp/Desktop/FinAi  Python/financial_data_500.csv")
+df = pd.read_csv("C:/Users/zeelp/Desktop/CrediSynth/Python/goal/financial_data_500.csv")
 
 # Convert dates to datetime
 df['transaction_date'] = pd.to_datetime(df['transaction_date'])

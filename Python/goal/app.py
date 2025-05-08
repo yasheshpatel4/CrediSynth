@@ -1,85 +1,108 @@
-import json
-import logging
-from flask import Flask, jsonify, request
+from flask import Flask, request, jsonify
 import joblib
 import tensorflow as tf
+from datetime import datetime
+import json
+import logging
 
 app = Flask(__name__)
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)  # Set log level to INFO or DEBUG
-logger = logging.getLogger(__name__)  # Create a logger for your module
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Load model and scaler
 try:
-    model = tf.keras.models.load_model("saved_model/investment_predictor.h5")
-    scaler = joblib.load("saved_model/scaler.pkl")
+    model = tf.keras.models.load_model('saved_model/investment_predictor.h5')
+    scaler = joblib.load('saved_model/scaler.pkl')
     logger.info("✅ Model and scaler loaded successfully")
 except Exception as e:
-    logger.error(f"❌ Failed to load model/scaler: {str(e)}")
+    logger.error(f"❌ Failed to load model/scaler: {e}")
+    model = None
+    scaler = None
 
-# Load training metadata
+# Load training metadata if available (optional)
 try:
     with open("saved_model/training_metadata.json", "r") as f:
         training_metadata = json.load(f)
-    logger.info("✅ Training metadata loaded successfully")
-except Exception as e:
-    logger.error(f"❌ Failed to load training metadata: {str(e)}")
+except:
     training_metadata = {}
 
-# Define /predict route
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        # Parse input data from POST request
-        input_data = request.get_json()  # assuming input data is sent as JSON
-        
-        # Extract features (e.g., amount, goal_target, goal_saved, goal_time_left_days)
-        features = [
-            input_data['amount'],
-            input_data['goal_target'],
-            input_data['goal_saved'],
-            input_data['goal_time_left_days']
-        ]
-        
-        # Scale the input data using the saved scaler
-        features_scaled = scaler.transform([features])
-        
-        # Predict the result (probability) using the trained model
-        prediction_prob = model.predict(features_scaled)[0][0]
-        result = 1 if prediction_prob >= 0.5 else 0
-        
-        # Prepare the response with training insights
-        response = {
-            "prediction": result,
-            "confidence": float(prediction_prob),
-            "message": "Likely to invest" if result else "Unlikely to invest",
-            "status": "success",
-            "model_analytics": {
-                "training_performance": {
-                    "accuracy": training_metadata.get("final_accuracy"),
-                    "loss": training_metadata.get("final_loss"),
-                    "training_duration": training_metadata.get("training_duration"),
-                    "best_epoch": training_metadata.get("best_epoch")
-                },
-                "data_distribution": {
-                    "class_ratio": training_metadata.get("class_distribution"),
-                    "total_samples": training_metadata.get("total_samples"),
-                    "feature_means": training_metadata.get("feature_means")
-                },
-                "model_architecture": {
-                    "layers": [layer.__class__.__name__ for layer in model.layers],
-                    "input_shape": model.input_shape[1:],
-                    "output_shape": model.output_shape[1:]
-                }
-            }
-        }
-        
-        return jsonify(response)
-    
-    except Exception as e:
-        logger.error(f"❌ Error in prediction: {str(e)}")
-        return jsonify({"status": "error", "message": str(e)})
+        if model is None or scaler is None:
+            raise ValueError("Model or scaler not loaded properly.")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        data = request.get_json()
+        required = ['name', 'targetAmount', 'savedAmount', 'deadline']
+        for field in required:
+            if field not in data:
+                return jsonify({"error": f"Missing field: {field}"}), 400
+
+        name = data['name']
+        target = float(data['targetAmount'])
+        saved = float(data['savedAmount'])
+        deadline_raw = data['deadline']
+
+        if isinstance(deadline_raw, list):
+            deadline_raw = deadline_raw[0]
+        if isinstance(deadline_raw, int):
+            deadline_raw = str(deadline_raw)
+
+        deadline = datetime.strptime(deadline_raw, "%Y-%m-%d").date()
+        today = datetime.today().date()
+        days_left = max((deadline - today).days, 0)
+        weeks_left = round(days_left / 7, 1)
+        months_left = round(days_left / 30.44, 1)
+
+        # Feature preparation
+        features = [[saved, target, saved, days_left]]
+        scaled_features = scaler.transform(features)
+
+        prob = model.predict(scaled_features)[0][0]
+        result = int(prob >= 0.5)
+
+        # Analysis
+        progress_percent = round((saved / target) * 100, 2) if target else 0
+        daily_savings_needed = round((target - saved) / days_left, 2) if days_left > 0 else None
+
+        if saved >= target:
+            goal_status = "Achieved"
+        elif daily_savings_needed and daily_savings_needed <= (target * 0.01):
+            goal_status = "On Track"
+        else:
+            goal_status = "Behind"
+
+        if goal_status == "Behind":
+            recommendation = f"Try saving at least ₹{daily_savings_needed} per day to catch up."
+        elif goal_status == "Achieved":
+            recommendation = "🎉 Congratulations! You've achieved your goal."
+        else:
+            recommendation = "👍 You're on track. Keep saving consistently."
+
+        return jsonify({
+            "prediction": result,
+            "confidence": float(prob),
+            "message": "Likely to invest" if result else "Unlikely to invest",
+            "goal": {
+                "name": name,
+                "targetAmount": target,
+                "savedAmount": saved,
+                "deadline": deadline_raw,
+                "daysLeft": days_left,
+                "weeksLeft": weeks_left,
+                "monthsLeft": months_left,
+                "progressPercent": progress_percent,
+                "dailySavingsNeeded": daily_savings_needed,
+                "goalStatus": goal_status,
+                "recommendation": recommendation
+            },
+            "model_metadata": training_metadata
+        })
+
+    except Exception as e:
+        logger.error(f"Prediction error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(port=5001, debug=True)

@@ -10,7 +10,7 @@ import java.util.Map;
 @Service
 public class FlaskService {
 
-    private final String FLASK_URL = "http://localhost:5000/predict";
+    private final String FLASK_URL = "http://localhost:5002/predict";
 
 
     public Map<String, Object> analyzeInvestment(Investment investment) {

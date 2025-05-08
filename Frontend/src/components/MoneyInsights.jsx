@@ -1,337 +1,217 @@
-import React, { useState, useEffect } from "react"
+"use client"
+
+import { useState, useEffect } from "react"
 import axios from "axios"
+import { Bar, Doughnut } from "react-chartjs-2"
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement,
+  Legend
 } from "chart.js"
-import { Pie, Bar, Line } from "react-chartjs-2"
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement,
+  Legend
 )
 
 const MoneyInsights = () => {
-  const [detailType, setDetailType] = useState("expense")
-  const [description, setDescription] = useState("")
-  const [amount, setAmount] = useState("")
-  const [date, setDate] = useState("")
-  const [category, setCategory] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [barData, setBarData] = useState(null)
-  const [lineData, setLineData] = useState(null)
-  const [pieData, setPieData] = useState(null)
-  const [submitSuccess, setSubmitSuccess] = useState(false)
-  const [showAnalysis, setShowAnalysis] = useState(false)
-  const [detailedAnalysis, setDetailedAnalysis] = useState([])
-  const [recommendations, setRecommendations] = useState([])
+  const [data, setData] = useState({})
+  const [loading, setLoading] = useState(true)
+  const userid = localStorage.getItem("email")
 
-  const userEmail = localStorage.getItem("email")
-
-  const fetchAnalysisData = async () => {
-    setLoading(true)
-    setError("")
+  const fetchData = async () => {
     try {
-      const res = await axios.post(`http://localhost:8080/api/money-insights/analyze/${userEmail}`)
-      const data = res.data
-
-      const barLabels = data.monthlySavingExpense?.labels || []
-      const savingValues = data.monthlySavingExpense?.saving || []
-      const expenseValues = data.monthlySavingExpense?.expense || []
-      setBarData({
-        labels: barLabels,
-        datasets: [
-          {
-            label: "Saving",
-            data: savingValues,
-            backgroundColor: "#36A2EB",
-          },
-          {
-            label: "Expense",
-            data: expenseValues,
-            backgroundColor: "#FF6384",
-          },
-        ],
-      })
-
-      const lineLabels = data.monthlySaving?.labels || []
-      const monthlySavingValues = data.monthlySaving?.data || []
-      setLineData({
-        labels: lineLabels,
-        datasets: [
-          {
-            label: "Monthly Saving",
-            data: monthlySavingValues,
-            borderColor: "#36A2EB",
-            backgroundColor: "rgba(54, 162, 235, 0.2)",
-            fill: true,
-            tension: 0.3,
-          },
-        ],
-      })
-
-      const pieLabels = data.categoryWiseSpending?.labels || []
-      const pieValues = data.categoryWiseSpending?.data || []
-      setPieData({
-        labels: pieLabels,
-        datasets: [
-          {
-            label: "Category Wise Spending",
-            data: pieValues,
-            backgroundColor: [
-              "#FF6384",
-              "#36A2EB",
-              "#FFCE56",
-              "#4BC0C0",
-              "#9966FF",
-              "#FF9F40",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      })
-
-      setDetailedAnalysis(data.detailedAnalysis || [])
-      setRecommendations(data.recommendations || [])
-      setSubmitSuccess(true)
-      setError("")
-    } catch (err) {
-      setError("Failed to fetch analysis data.")
-      console.error(err)
-    } finally {
+      const response = await axios.post(`http://localhost:8080/api/insights/${userid}`)
+      setData(response.data)
+      setLoading(false)
+    } catch (error) {
+      console.error("Error fetching data:", error)
       setLoading(false)
     }
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError("")
-    setSubmitSuccess(false)
-
-    if (!description || !amount || !date || !category) {
-      setError("Please fill in all fields.")
-      return
-    }
-
-    const numericAmount = parseFloat(amount)
-    if (isNaN(numericAmount) || numericAmount <= 0) {
-      setError("Please enter a valid positive amount.")
-      return
-    }
-
-    setLoading(true)
-    try {
-      await axios.post(`http://localhost:8080/api/money-insights/add/${userEmail}`, {
-        description,
-        amount: numericAmount,
-        date,
-        category,
-        type: detailType,
-      })
-
-      await fetchAnalysisData()
-
-      setDescription("")
-      setAmount("")
-      setDate("")
-      setCategory("")
-    } catch (err) {
-      setError("Failed to submit or fetch analysis data.")
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // New handler for Analysis button click
-  const handleAnalysisClick = async () => {
-    await fetchAnalysisData()
-    setShowAnalysis(true)
   }
 
   useEffect(() => {
-    if (userEmail) {
-      fetchAnalysisData()
+    fetchData()
+  }, [])
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        backgroundColor: "#1f2937",
+        titleColor: "#fff",
+        bodyColor: "#f3f4f6",
+        borderColor: "#4b5563",
+        borderWidth: 1,
+      },
+      legend: {
+        labels: {
+          color: "white",
+          font: { size: 14 },
+        },
+      },
+    },
+    scales: {
+      x: {
+        ticks: { color: "white" },
+        grid: { color: "rgba(255,255,255,0.1)" },
+      },
+      y: {
+        ticks: { color: "white" },
+        grid: { color: "rgba(255,255,255,0.1)" },
+        beginAtZero: true,
+        max: 100,
+      },
+    },
+  }
+
+  const chartData = {
+    savings: {
+      labels: ["Savings Progress"],
+      datasets: [{
+        label: "Savings Progress",
+        data: [data.savings_progress_percent || 0],
+        backgroundColor: "#34d399",
+        borderRadius: 8,
+      }]
+    },
+    roi: {
+      labels: ["ROI"],
+      datasets: [{
+        label: "ROI (%)",
+        data: [data.roi_percent || 0],
+        backgroundColor: "#60a5fa",
+        borderRadius: 8,
+      }]
+    },
+    diversification: {
+      labels: ["Score", "Remaining"],
+      datasets: [{
+        data: [data.diversification_score_percent || 0, 100 - (data.diversification_score_percent || 0)],
+        backgroundColor: ["#10b981", "#1e293b"],
+      }]
+    },
+    investSaveCompare: {
+      labels: ["Saved", "Target"],
+      datasets: [{
+        data: [data.features_used?.savedAmount || 0, data.features_used?.savingsTarget || 0],
+        backgroundColor: ["#3b82f6", "#f59e0b"],
+      }]
+    },
+    risk: {
+      labels: ["Low", "Medium", "High"],
+      datasets: [{
+        data: [
+          data.features_used?.riskTolerance === "low" ? 1 : 0,
+          data.features_used?.riskTolerance === "medium" ? 1 : 0,
+          data.features_used?.riskTolerance === "high" ? 1 : 0,
+        ],
+        backgroundColor: ["#10b981", "#f59e0b", "#ef4444"],
+      }]
     }
-  }, [userEmail])
+  }
+
+  if (loading) {
+    return (
+      <section className="max-w-7xl mx-auto px-4 py-20">
+        <h2 className="text-4xl font-bold text-center text-white animate-pulse">Loading Insights...</h2>
+      </section>
+    )
+  }
 
   return (
-    <section id="money-insights" className="min-h-screen flex flex-col items-center justify-center px-4 py-12 text-white">
-      <div className="flex items-center mb-6">
-        <h2 className="text-3xl font-bold mr-6">Money Insights</h2>
-        <div className="flex space-x-4">
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="detailType"
-              value="expense"
-              checked={detailType === "expense"}
-              onChange={() => setDetailType("expense")}
-              className="accent-blue-500"
-            />
-            <span>Expense</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="radio"
-              name="detailType"
-              value="saving"
-              checked={detailType === "saving"}
-              onChange={() => setDetailType("saving")}
-              className="accent-blue-500"
-            />
-            <span>Saving</span>
-          </label>
-        </div>
-      </div>
+    <section className="max-w-7xl mx-auto px-4 py-12">
+      <h2 className="text-4xl font-extrabold mb-12 text-center bg-gradient-to-r from-cyan-400 to-blue-600 text-transparent bg-clip-text">Real-Time Money Insights</h2>
 
-      <form onSubmit={handleSubmit} className="bg-[#0a1628] p-6 rounded-lg shadow-md mb-8 max-w-md space-y-4 w-full max-w-lg">
-        <div>
-          <label htmlFor="description" className="block mb-1 font-semibold">
-            Description
-          </label>
-          <input
-            id="description"
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded border border-gray-600 bg-[#14253d] p-2 text-white"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="amount" className="block mb-1 font-semibold">
-            Amount
-          </label>
-          <input
-            id="amount"
-            type="number"
-            step="0.01"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="w-full rounded border border-gray-600 bg-[#14253d] p-2 text-white"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="date" className="block mb-1 font-semibold">
-            Date
-          </label>
-          <input
-            id="date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-full rounded border border-gray-600 bg-[#14253d] p-2 text-white"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="category" className="block mb-1 font-semibold">
-            Category
-          </label>
-          <input
-            id="category"
-            type="text"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full rounded border border-gray-600 bg-[#14253d] p-2 text-white"
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded disabled:opacity-50"
-        >
-          {loading ? "Submitting..." : "Submit"}
-        </button>
-        {submitSuccess && <p className="text-green-500 mt-2">Data submitted and analysis updated successfully.</p>}
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-      </form>
+      <div className="grid md:grid-cols-2 gap-10">
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-7xl">
-        {barData && (
-          <div className="bg-[#0a1628] p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-blue-400">Monthly Saving and Expense</h3>
-            <Bar data={barData} options={{ responsive: true, plugins: { legend: { position: "top" } } }} />
+        {/* Diversification */}
+        <Card title="Diversification Score">
+          <div className="h-[250px]">
+            <Doughnut data={chartData.diversification} options={chartOptions} />
           </div>
-        )}
-        {lineData && (
-          <div className="bg-[#0a1628] p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-blue-400">Monthly Saving</h3>
-            <Line data={lineData} options={{ responsive: true, plugins: { legend: { position: "top" } } }} />
-          </div>
-        )}
-        {pieData && (
-          <div className="bg-[#0a1628] p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-blue-400">Category Wise Spending</h3>
-            <Pie data={pieData} options={{ responsive: true, plugins: { legend: { position: "right" } } }} />
-          </div>
-        )}
-      </div>
+          <p className="text-center mt-4 text-white font-medium">
+            {data.diversification_score_percent}% – {data.diversification_score_percent >= 70 ? "Good" : "Needs Improvement"}
+          </p>
+        </Card>
 
-      {/* Analysis Button */}
-      <div className="mt-6">
-        <button
-          onClick={handleAnalysisClick}
-          disabled={loading}
-          className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded disabled:opacity-50"
-        >
-          {loading ? "Loading Analysis..." : "Show Analysis"}
-        </button>
-      </div>
+        {/* ROI */}
+        <Card title="ROI (Return on Investment)">
+          <div className="h-[250px]">
+            <Bar data={chartData.roi} options={chartOptions} />
+          </div>
+        </Card>
 
-      {/* Show detailed analysis when button clicked */}
-      {showAnalysis && (
-        <div className="bg-[#0a1628] p-6 rounded-lg shadow-md max-w-7xl mt-8 text-gray-300">
-          <h3 className="text-xl font-semibold mb-4 text-blue-400">Analysis Suggestions</h3>
-          {(detailedAnalysis.length > 0 || recommendations.length > 0) ? (
-            <>
-              {detailedAnalysis.length > 0 && (
-                <>
-                  <h4 className="text-lg font-semibold mb-2">Detailed Analysis</h4>
-                  <ul className="list-disc list-inside mb-4">
-                    {detailedAnalysis.map((item, index) => (
-                      <li key={index}>{item}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-              {recommendations.length > 0 && (
-                <>
-                  <h4 className="text-lg font-semibold mb-2">Recommendations</h4>
-                  <ul className="list-disc list-inside">
-                    {recommendations.map((rec, idx) => (
-                      <li key={idx}>{rec}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </>
-          ) : (
-            <p>No analysis suggestions available.</p>
-          )}
-        </div>
-      )}
+        {/* Savings Progress */}
+        <Card title="Savings Progress">
+          <div className="h-[250px]">
+            <Bar data={chartData.savings} options={chartOptions} />
+          </div>
+        </Card>
+
+        {/* Investment vs Target */}
+        <Card title="Investment vs Target">
+          <div className="h-[250px]">
+            <Bar data={chartData.investSaveCompare} options={chartOptions} />
+          </div>
+        </Card>
+
+        {/* Risk Tolerance */}
+        <Card title="Risk Tolerance">
+          <div className="h-[250px]">
+            {chartData.risk ? (
+              <Bar data={chartData.risk} options={chartOptions} />
+            ) : (
+              <p>Loading risk chart...</p>
+            )}
+          </div>
+        </Card>
+
+        {/* Features Used */}
+        <Card title="Features Used">
+          <ul className="text-gray-300 space-y-1 text-sm">
+            <li>Investment Type: {data.features_used?.investmentType}</li>
+            <li>Risk Tolerance: {data.features_used?.riskTolerance}</li>
+            <li>Monthly Income: ${data.features_used?.monthlyIncome.toFixed(2)}</li>
+            <li>Avg. Purchase Price: ${data.features_used?.purchasePriceAvg.toFixed(2)}</li>
+            <li>Saved Amount: ${data.features_used?.savedAmount.toFixed(2)}</li>
+            <li>Savings Target: ${data.features_used?.savingsTarget.toFixed(2)}</li>
+          </ul>
+        </Card>
+
+        {/* Predicted Insight */}
+        <Card title="Predicted Insight">
+          <p className="text-gray-300">{data.predicted_insight}</p>
+        </Card>
+
+        {/* Suggestions */}
+        <Card title="Suggestions">
+          <ul className="list-disc list-inside text-gray-300 space-y-1 text-sm">
+            {data.suggestions?.map((s, i) => <li key={i}>{s}</li>)}
+          </ul>
+        </Card>
+
+      </div>
     </section>
   )
 }
+
+const Card = ({ title, children }) => (
+  <div className="bg-gradient-to-br from-[#0f172a] to-[#1e293b] p-6 rounded-2xl shadow-lg">
+    <h3 className="text-lg font-semibold text-cyan-400 mb-4">{title}</h3>
+    {children}
+  </div>
+)
 
 export default MoneyInsights

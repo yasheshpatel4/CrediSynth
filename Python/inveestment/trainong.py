@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 import joblib
 
 # Load dataset
-df = pd.read_csv("investment_data.csv")
+df = pd.read_csv("C:/Users/zeelp/Desktop/CrediSynth/Python/inveestment/investment_data.csv")
 
 # Feature engineering
 df["roi"] = ((df["current_value"] - df["purchase_price"]) / df["purchase_price"]) * 100

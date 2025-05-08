@@ -26,7 +26,7 @@ model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
 # Save model
-joblib.dump(model, 'money_insights/money_insights_model.pkl')
+joblib.dump(model, 'C:/Users/zeelp/Desktop/CrediSynth/Python/money_insights/money_insights_model.pkl')
 
 y_pred_test = model.predict(X_test)
 test_accuracy = accuracy_score(y_test, y_pred_test)
