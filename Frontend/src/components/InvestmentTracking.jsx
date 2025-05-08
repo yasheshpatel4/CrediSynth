@@ -6,12 +6,12 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend,
+  Legend
 } from "chart.js"
 import { Bar } from "react-chartjs-2"
 import { useState,useEffect } from "react"
-
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+import { PieChart, Pie, Cell } from 'recharts';
+ChartJS.register(CategoryScale, LinearScale, BarElement,Title, Tooltip, Legend)
 
 
 
