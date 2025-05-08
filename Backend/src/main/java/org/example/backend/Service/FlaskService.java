@@ -1,4 +1,4 @@
-package org.example.backend.Service;
+package org.example.backend.service;
 
 import org.example.backend.model.Investment;
 import org.springframework.stereotype.Service;

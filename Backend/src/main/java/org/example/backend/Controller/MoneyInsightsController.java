@@ -1,7 +1,5 @@
 package org.example.backend.controller;
 
-import org.example.backend.model.UserProfile;
-import org.example.backend.repository.UserRepository;
 import org.example.backend.service.InsightsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

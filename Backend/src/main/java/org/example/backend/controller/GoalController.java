@@ -1,7 +1,7 @@
-package org.example.backend.Controller;
+package org.example.backend.controller;
 
 import org.example.backend.model.*;
-import org.example.backend.Repository.*;
+import org.example.backend.repository.*;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -19,7 +19,7 @@ import java.util.*;
 public class GoalController {
 
     @Autowired
-    private GoalRepository goalRepository;
+    private org.example.backend.Repository.GoalRepository goalRepository;
 
     @Autowired
     private UserRepository userRepository;

@@ -1,11 +1,11 @@
-package org.example.backend.Controller;
+package org.example.backend.controller;
 
 
 import org.example.backend.Service.FlaskService;
 import org.example.backend.model.Investment;
 import org.example.backend.model.User;
 import org.example.backend.Repository.InvestmentRepository;
-import org.example.backend.Repository.UserRepository;
+import org.example.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

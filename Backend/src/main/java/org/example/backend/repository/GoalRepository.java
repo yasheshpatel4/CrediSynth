@@ -1,4 +1,4 @@
-package org.example.backend.Repository;
+package org.example.backend.repository;
 
 import org.example.backend.model.Goal;
 import org.springframework.data.jpa.repository.JpaRepository;

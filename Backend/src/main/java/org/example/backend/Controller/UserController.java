@@ -1,9 +1,9 @@
-package org.example.backend.Controller;
+package org.example.backend.controller;
 
 import org.example.backend.model.User;
 import org.example.backend.model.UserProfile;
 import org.example.backend.Repository.UserProfileRepository;
-import org.example.backend.Repository.UserRepository;
+import org.example.backend.repository.UserRepository;
 import org.example.backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
