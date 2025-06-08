@@ -55,7 +55,7 @@ const GoalBasedSaving = () => {
     }
 
     try {
-      await axios.post(`http://localhost:8080/api/goals/${userId}`, formData, {
+      await axios.post(`http://localhost:8081/api/goals/${userId}`, formData, {
         headers: { "Content-Type": "application/json" },
       })
       alert("Goal submitted successfully!")
@@ -70,7 +70,7 @@ const GoalBasedSaving = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/goals/delete/${id}`)
+      await axios.delete(`http://localhost:8081/api/goals/delete/${id}`)
       fetchGoals()
     } catch (error) {
       console.error("Delete failed:", error)
@@ -79,7 +79,7 @@ const GoalBasedSaving = () => {
 
   const handleAnalyze = async (goalData) => {
     try {
-      const res = await axios.post(`http://localhost:8080/api/goals/analyze/${goalData.id}`, goalData)
+      const res = await axios.post(`http://localhost:8081/api/goals/analyze/${goalData.id}`, goalData)
       setAnalysisResult(res.data)
     } catch (error) {
       console.error("Error analyzing goal:", error)
