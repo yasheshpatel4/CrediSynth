@@ -28,6 +28,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @RequestMapping("/hello")
+    public String hello() {
+        return "Hello World";
+    }
+
     @PostMapping("/register")
     public ResponseEntity<?> signup(@RequestBody User user) {
         try {
