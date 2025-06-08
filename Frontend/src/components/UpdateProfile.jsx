@@ -19,7 +19,7 @@ const UpdateProfile = () => {
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const res = await axios.get(`http://localhost:8080/api/auth/profile/${email}`, {
+                const res = await axios.get(`http://localhost:8081/api/auth/profile/${email}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -52,7 +52,7 @@ const UpdateProfile = () => {
         e.preventDefault();
 
         try {
-            await axios.post(`http://localhost:8080/api/auth/profile/${email}`, form, {
+            await axios.post(`http://localhost:8081/api/auth/profile/${email}`, form, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"

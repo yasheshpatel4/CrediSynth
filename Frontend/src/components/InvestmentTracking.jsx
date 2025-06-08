@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react"
 import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, LineChart, Line, ResponsiveContainer } from "recharts"
 
-const API_BASE = "http://localhost:8080/api/investments"
+const API_BASE = "http://localhost:8081/api/investments"
 const USER_ID = localStorage.getItem("email")
 
 const COLORS = ["#4ade80", "#f87171"]

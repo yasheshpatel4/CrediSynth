@@ -31,7 +31,7 @@ const MoneyInsights = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.post(`http://localhost:8080/api/insights/${userid}`)
+      const response = await axios.post(`http://localhost:8081/api/insights/${userid}`)
       setData(response.data)
       setLoading(false)
     } catch (error) {
